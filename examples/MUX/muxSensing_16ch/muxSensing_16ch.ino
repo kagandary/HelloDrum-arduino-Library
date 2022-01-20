@@ -13,7 +13,7 @@
 #define Drum_map 0 //0-ADD2, 1-EZD2
 
 byte Note[2][16] = {
-    /* _ Hihat tip
+    /* _ Hihat 
     |     _ Kick
     |    |    _ Snare Open hit
     |    |   |    _ Snare SideStick
@@ -21,7 +21,7 @@ byte Note[2][16] = {
     |    |   |   |   |    _ Tom2
     |    |   |   |   |   |    _ Tom3
     |    |   |   |   |   |   |    _ Tom4
-    |    |   |   |   |   |   |   |    _ Extra1
+    |    |   |   |   |   |   |   |    _ Hihat Pedal
     |    |   |   |   |   |   |   |   |    _ Extra2
     |    |   |   |   |   |   |   |   |   |    _ Cym1  
     |    |   |   |   |   |   |   |   |   |   |    _ Cym2
@@ -30,16 +30,19 @@ byte Note[2][16] = {
     |    |   |   |   |   |   |   |   |   |   |   |   |   |   _ Ride tip
     |    |   |   |   |   |   |   |   |   |   |   |   |   |  |    _ Ride bell 
     |    |   |   |   |   |   |   |   |   |   |   |   |   |  |   |       BANK */
-    {8, 36, 38, 42, 71, 69, 67, 65, 47, 96, 77, 79, 81, 89, 60, 61}, // 0 - ADD2 MAP
-    {20, 36, 38, 37, 47, 48, 41, 43, 45, 1, 55, 49, 57, 52, 51, 53}  // 1 - EZD MAP
+    {8, 36, 38, 42, 71, 69, 67, 65, 44, 96, 77, 79, 81, 89, 60, 61}, // 0 - ADD2 MAP
+    //{20, 36, 38, 37, 47, 48, 41, 43, 45, 1, 55, 49, 57, 52, 51, 53}  // 1 - EZD MAP
 };
 
-int PAD1[5] = {
+int PAD1[7] = {
     100, //sensitivity
     10,  //threshold
     10,  //scan time
     30,  //mask time
-    Note[Drum_map][0]};
+    0, //curve
+    55, //acik icin
+    6}; //kapali icin
+    
 
 int PAD2[5] = {
     100, //sensitivity
@@ -90,12 +93,14 @@ int PAD8[5] = {
     30,  //mask time
     Note[Drum_map][7]};
 
-int PAD9[5] = {
-    100, //sensitivity
-    10,  //threshold
-    10,  //scan time
-    30,  //mask time
-    Note[Drum_map][8]};
+int PAD9[7] = {
+    90, //sensitivity
+    30,  //threshold
+    70,  //scan time
+    90,  //mask time
+    10,
+    0, 
+    48};
 
 int PAD10[5] = {
     100, //sensitivity
@@ -227,9 +232,18 @@ void loop()
 
   if (pad1.hit == true)
   {
-    MIDI.sendNoteOn(PAD1[4], pad1.velocity, 10); //(note, velocity, channel)
-    MIDI.sendNoteOff(PAD1[4], 0, 10);
-  }
+    if (pad9.openHH == true)
+   {
+    MIDI.sendNoteOn(PAD1[5], pad1.velocity, 10); //(note, velocity, channel)
+    MIDI.sendNoteOff(PAD1[5], 0, 10);
+   }
+    
+    else if (pad9.closeHH == true)
+   {
+    MIDI.sendNoteOn(PAD1[6], pad1.velocity, 10); //(note, velocity, channel)
+    MIDI.sendNoteOff(PAD1[6], 0, 10);
+   }
+  }   
 
   if (pad2.hit == true)
   {
@@ -317,7 +331,7 @@ void loop()
 
   if (pad16.hit == true)
   {
-    MIDI.sendNoteOn(PAD16[4], pad16.velocity, 10); //(note, velocity, channel)
-    MIDI.sendNoteOff(PAD16[4], 0, 10);
+    MIDI.sendNoteOn(PAD15[4], pad15.velocity, 10); //(note, velocity, channel)
+    MIDI.sendNoteOff(PAD15[4], 0, 10);
   }
 }
